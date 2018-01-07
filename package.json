@@ -1,0 +1,44 @@
+{
+	"name": "@sindresorhus/fnv1a",
+	"version": "0.0.0",
+	"description": "FNV-1a non-cryptographic hash function",
+	"license": "MIT",
+	"repository": "sindresorhus/fnv1a",
+	"author": {
+		"name": "Sindre Sorhus",
+		"email": "sindresorhus@gmail.com",
+		"url": "sindresorhus.com"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"engines": {
+		"node": ">=6"
+	},
+	"scripts": {
+		"test": "xo && ava"
+	},
+	"files": [
+		"index.js"
+	],
+	"keywords": [
+		"fnv1a",
+		"fnv-1a",
+		"fnv1",
+		"fnv-1",
+		"fnv",
+		"algorithm",
+		"hash",
+		"hashing",
+		"string",
+		"function",
+		"fowler–noll–vo",
+		"fowler",
+		"noll",
+		"vo"
+	],
+	"devDependencies": {
+		"ava": "*",
+		"xo": "*"
+	}
+}
