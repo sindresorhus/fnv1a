@@ -19,16 +19,17 @@ $ npm install @sindresorhus/fnv1a
 ```js
 const fnv1a = require('@sindresorhus/fnv1a');
 
-const bitFlavour = 32;
-fnv1a('🦄🌈', bitFlavour);
+For 32-bit implementation:
+
+fnv1a('🦄🌈');
 //=> 582881315
 
-const anotherBitFlavour = 128;
-fnv1a('🦄🌈', anotherBitFlavour);
+For 64-, 128-, 256-, 512-, 1024- bit implementations, pass an options object as following.
+
+fnv1a.bigInt('🦄🌈', { bits: 128 });
 //=> 11415202058807559249595270122456073815781937336796505892202057358875n
 ```
-
-Operations involving 32 and 64 bits return a positive integer and rest(128, 256, 512, 1024) return a Big Integer (BigInt)(Node 10.4.0+).
+Operations involving 32 bits return a positive integer hash and rest(64, 128, 256, 512, 1024) return a Big Integer hash. (BigInt)(Node 10.4.0+).
 
 ## Related
 

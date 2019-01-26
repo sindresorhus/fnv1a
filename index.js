@@ -4,48 +4,70 @@
  * Offset basis reference: http://www.isthe.com/chongo/tech/comp/fnv/index.html#FNV-param
  */
 
+const {getBigInt} = require('./utils');
+
 const OFFSET_BASIS = {
 	32: 2166136261,
-	64: 14695981039346656037,
+	64: getBigInt('14695981039346656037'),
 	128: getBigInt('144066263297769815596495629667062367629'),
-	256: getBigInt('100029257958052580907070968620625704837092796014241193945225284501741471925557'),
-	512: getBigInt('9659303129496669498009435400716310466090418745672637896108374329434462657994582932197716438449813051892206539805784495328239340083876191928701583869517785'),
-	1024: getBigInt('14197795064947621068722070641403218320880622795441933960878474914617582723252296732303717722150864096521202355549365628174669108571814760471015076148029755969804077320157692458563003215304957150157403644460363550505412711285966361610267868082893823963790439336411086884584107735010676915')
+	256: getBigInt(
+		'100029257958052580907070968620625704837092796014241193945225284501741471925557'
+	),
+	512: getBigInt(
+		'9659303129496669498009435400716310466090418745672637896108374329434462657994582932197716438449813051892206539805784495328239340083876191928701583869517785'
+	),
+	1024: getBigInt(
+		'14197795064947621068722070641403218320880622795441933960878474914617582723252296732303717722150864096521202355549365628174669108571814760471015076148029755969804077320157692458563003215304957150157403644460363550505412711285966361610267868082893823963790439336411086884584107735010676915'
+	)
 };
 
-function getBigInt(int) {
-	if (typeof (int) === Number) {
-		return BigInt(int);
+const FNV_PRIMES = {
+	32: 16777619,
+	64: getBigInt('1099511628211'),
+	128: getBigInt('309485009821345068724781371'),
+	256: getBigInt('374144419156711147060143317175368453031918731002211'),
+	512: getBigInt(
+		'35835915874844867368919076489095108449946327955754392558399825615420669938882575126094039892345713852759'
+	),
+	1024: getBigInt(
+		'5016456510113118655434598811035278955030765345404790744303017523831112055108147451509157692220295382716162651878526895249385292291816524375083746691371804094271873160484737966720260389217684476157468082573'
+	)
+};
+
+/**
+	* 32-bit default hash function.
+ * @param {string} - The input string.
+	* @returns `Integer hash.`
+ */
+function fnv1a(string) {
+	let hash = OFFSET_BASIS[32];
+	for (let i = 0; i < string.length; i++) {
+		hash ^= string.charCodeAt(i);
+		// Using bitshift for accuracy and performance. Numbers in JS suck.
+		hash +=
+			(hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
 	}
 
-	return BigInt(int.toString());
+	return hash >>> 0;
 }
 
-module.exports = (string, offsetBasis) => {
-	let hash = OFFSET_BASIS[offsetBasis];
+/**
+	* 64, 128, 256, 512, 1024 - bit hash functions.
+ * @param {string} - The input string
+ * @param {options} - Object specifying 'bits', etc.
+	* @returns `BigInt hash.`
+ */
 
-	/**
-	 * No need to do BigInt calculations.
-	 */
-
-	if (offsetBasis === 32 || offsetBasis === 64) {
-		for (let i = 0; i < string.length; i++) {
-			hash ^= string.charCodeAt(i);
-			// Using bitshift for accuracy and performance. Numbers in JS suck.
-			hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
-		}
-
-		return hash >>> 0;
-	}
-
-	/**
-	 * BigInt calculations for offsetBasis greater than 64.
-	 *
-	 */
+fnv1a.bigInt = function (string, options) {
+	const {bits} = options;
+	let hash = OFFSET_BASIS[bits];
+	const fnvPrime = FNV_PRIMES[bits];
 	for (let i = 0; i < string.length; i++) {
 		hash ^= getBigInt(string.charCodeAt(i).toString());
-		hash += (hash << getBigInt('1')) + (hash << getBigInt('4')) + (hash << getBigInt('7')) + (hash << getBigInt('8')) + (hash << getBigInt('24'));
+		hash *= fnvPrime;
 	}
 
-	return hash >> getBigInt('0');
+	return hash;
 };
+
+module.exports = fnv1a;
