@@ -1,21 +1,40 @@
 import test from 'ava';
 import m from '.';
 
-test(t => {
-	t.is(m(''), 2166136261);
-	t.is(m('🦄🌈'), 582881315);
+test('32-bit', t => {
+	t.is(m('', 32), 2166136261);
+	t.is(m('h', 32), 3977000791);
+	t.is(m('he', 32), 1547363254);
+	t.is(m('hel', 32), 179613742);
+	t.is(m('hell', 32), 477198310);
+	t.is(m('hello', 32), 1335831723);
+});
 
-	t.is(m('h'), 3977000791);
-	t.is(m('he'), 1547363254);
-	t.is(m('hel'), 179613742);
-	t.is(m('hell'), 477198310);
-	t.is(m('hello'), 1335831723);
-	t.is(m('hello '), 3801292497);
-	t.is(m('hello w'), 1402552146);
-	t.is(m('hello wo'), 3611200775);
-	t.is(m('hello wor'), 1282977583);
-	t.is(m('hello worl'), 2767971961);
-	t.is(m('hello world'), 3582672807);
+test('64-bit', t => {
+	t.is(m('', 64), 2216828928);
+	t.is(m('h', 64), 1773732792);
+	t.is(m('he', 64), 1262556391);
+	t.is(m('hel', 64), 41113297);
+	t.is(m('hell', 64), 2559675271);
+	t.is(m('hello', 64), 354369080);
+});
 
-	t.is(m('Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.'), 2964896417);
+test('128-bit', t => {
+	t.is(m('', 128), BigInt('144066263297769815596495629667062367629'));
+	t.is(m('hello', 128), BigInt('191519910950688823409635346316651407957842196177884478566529985018417858115'));
+});
+
+test('256-bit', t => {
+	t.is(m('', 256), BigInt('100029257958052580907070968620625704837092796014241193945225284501741471925557'));
+	t.is(m('hello', 256), BigInt('132977659988258169312774714223572056353534164623223172736224595346578866812233676781235008839645455238920898241467'));
+});
+
+test('512-bit', t => {
+	t.is(m('', 512), BigInt('9659303129496669498009435400716310466090418745672637896108374329434462657994582932197716438449813051892206539805784495328239340083876191928701583869517785'));
+	t.is(m('hello', 512), BigInt('12840958270592902367294455120553506489481582495705134745875229333492560699495620072179955523779605132252470078681180799233573673755596529497223654533445977443590297871635335902385478202072503'));
+});
+
+test('1024-bit', t => {
+	t.is(m('', 1024), BigInt('14197795064947621068722070641403218320880622795441933960878474914617582723252296732303717722150864096521202355549365628174669108571814760471015076148029755969804077320157692458563003215304957150157403644460363550505412711285966361610267868082893823963790439336411086884584107735010676915'));
+	t.is(m('hello', 1024), BigInt('18874373391046305844350759101192757498465167093308953598362911429428296380579860590141274804511363348156375190707641476502087863789098399227198151036928118307171186139326881658807607707365903612057777421346995526521610135529946499433089423507357855742741185115484713046694348760699766798538972515232266602443878837829974321'));
 });
