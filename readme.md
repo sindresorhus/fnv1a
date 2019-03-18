@@ -23,7 +23,7 @@ fnv1a('🦄🌈');
 //=> 582881315
 ```
 
-It returns a positive integer.
+It returns the hash as a positive integer.
 
 
 ## Related
