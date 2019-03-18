@@ -1,7 +1,7 @@
 'use strict';
 const OFFSET_BASIS_32 = 2166136261;
 
-module.exports = string => {
+const fnv1a = string => {
 	let hash = OFFSET_BASIS_32;
 
 	for (let i = 0; i < string.length; i++) {
@@ -14,3 +14,6 @@ module.exports = string => {
 
 	return hash >>> 0;
 };
+
+module.exports = fnv1a;
+module.exports.default = fnv1a;
