@@ -1,4 +1,4 @@
-import {expectType} from 'tsd-check';
-import fnv1a from '.';
+import {expectType} from 'tsd';
+import fnv1a = require('.');
 
 expectType<number>(fnv1a('🦄🌈'));
