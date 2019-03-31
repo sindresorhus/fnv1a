@@ -16,4 +16,5 @@ const fnv1a = string => {
 };
 
 module.exports = fnv1a;
+// TODO: remove this in the next major version, refactor the whole definition to:
 module.exports.default = fnv1a;
