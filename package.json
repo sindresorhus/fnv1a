@@ -1,6 +1,6 @@
 {
 	"name": "@sindresorhus/fnv1a",
-	"version": "1.1.0",
+	"version": "1.2.0",
 	"description": "FNV-1a non-cryptographic hash function",
 	"license": "MIT",
 	"repository": "sindresorhus/fnv1a",
