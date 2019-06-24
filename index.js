@@ -15,6 +15,10 @@ const fnv1a = string => {
 	return hash >>> 0;
 };
 
+if (typeof BigInt !== undefined) {
+	fnv1a.bigInt = require('./bigInt');
+}
+
 module.exports = fnv1a;
 // TODO: remove this in the next major version, refactor the whole definition to:
 module.exports.default = fnv1a;
