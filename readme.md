@@ -13,18 +13,28 @@ FNV hashes are designed to be fast while maintaining a low collision rate. The F
 $ npm install @sindresorhus/fnv1a
 ```
 
-
 ## Usage
+
+### fnv1a(string)
 
 ```js
 const fnv1a = require('@sindresorhus/fnv1a');
 
-fnv1a('🦄🌈');
-//=> 582881315
+fnv1a('🦄🌈'); // => 2868248295
 ```
 
-It returns the hash as a positive integer.
+It returns the hash as a 32-bit positive Number.
 
+### fnv1a.bigInt(string, [{size}])
+
+On systems that support BigInt, this method may be called to generate larger
+hashes.  This method throws if BigInt is not available, however.
+
+```
+fnv1a.bigInt('hello world', {size: 128}); // => 143667438548887148232425432707801491127n
+```
+
+It returns the hash as a `size`-bit positive BigInt.
 
 ## Related
 
