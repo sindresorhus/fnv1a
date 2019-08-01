@@ -3,7 +3,7 @@
 // FNV_PRIMES and FNV_OFFSETS from
 // http://www.isthe.com/chongo/tech/comp/fnv/index.html#FNV-param
 //
-// Would define these as BigInt literals, but that causes syntax errors on
+// Defining these as strings instead of BigInt literals avoids syntax errors on
 // legacy platforms.
 
 const FNV_PRIMES = {
@@ -37,7 +37,7 @@ function fnv1a(str) {
   }
 
   return hash >>> 0;
-};
+}
 
 function bigInt(str, {size} = {size: 32}) {
   if (typeof(BigInt) == 'undefined') {
@@ -48,7 +48,6 @@ function bigInt(str, {size} = {size: 32}) {
     throw Error('`size` must be one of 32, 64, 128, 256, 512, or 1024')
   }
 
-  const mod = BigInt(2) ** BigInt(size);
   let hash = BigInt(FNV_OFFSETS[size]);
   const prime = BigInt(FNV_PRIMES[size]);
 
@@ -57,17 +56,11 @@ function bigInt(str, {size} = {size: 32}) {
 
   for (let i = 0; i < str.length; i++) {
     hash ^= BigInt(str.charCodeAt(i));
-    hash = hash * prime % mod;
+    hash = BigInt.asUintN(size, hash * prime);
   }
 
   return hash;
 }
-
-// Default = 32-bit hash, returning Number
-function fnv1a(str) {
-  return Number(bigInt(str, {size: 32}));
-}
-
 
 module.exports = fnv1a;
 module.exports.bigInt = bigInt;
