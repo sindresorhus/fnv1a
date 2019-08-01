@@ -1,19 +1,46 @@
 'use strict';
+
 const OFFSET_BASIS_32 = 2166136261;
 
-const fnv1a = string => {
-	let hash = OFFSET_BASIS_32;
+function fnv1a(str) {
+	let _ = OFFSET_BASIS_32; // The running hash value
 
-	for (let i = 0; i < string.length; i++) {
-		hash ^= string.charCodeAt(i);
+	for (const c of str) {
+		const v = c.codePointAt(0);
 
-		// 32-bit FNV prime: 2**24 + 2**8 + 0x93 = 16777619
-		// Using bitshift for accuracy and performance. Numbers in JS suck.
-		hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
+		// Process each byte of unicode codepoints.  The code here would be smaller
+		// if we used the `unescape(encodeURIComponent(str))` hack, but that's not
+		// as efficient.  This also gzips well, so doesn't actually make the code
+		// that much bigger.
+		if (v < 0x80) {
+			_ ^= v & 0x7F;
+			_ += (_ << 1) + (_ << 4) + (_ << 7) + (_ << 8) + (_ << 24);
+		} else if (v < 0x800) {
+			_ ^= (v >> 6) | 0xC0;
+			_ += (_ << 1) + (_ << 4) + (_ << 7) + (_ << 8) + (_ << 24);
+			_ ^= (v & 0x3F) | 0x80;
+			_ += (_ << 1) + (_ << 4) + (_ << 7) + (_ << 8) + (_ << 24);
+		} else if (v < 0x10000) {
+			_ ^= (v >> 12) | 0xE0;
+			_ += (_ << 1) + (_ << 4) + (_ << 7) + (_ << 8) + (_ << 24);
+			_ ^= ((v >> 6) & 0x3F) | 0x80;
+			_ += (_ << 1) + (_ << 4) + (_ << 7) + (_ << 8) + (_ << 24);
+			_ ^= (v & 0x3F) | 0x80;
+			_ += (_ << 1) + (_ << 4) + (_ << 7) + (_ << 8) + (_ << 24);
+		} else {
+			_ ^= (v >> 18) | 0xF0;
+			_ += (_ << 1) + (_ << 4) + (_ << 7) + (_ << 8) + (_ << 24);
+			_ ^= ((v >> 12) & 0x3F) | 0x80;
+			_ += (_ << 1) + (_ << 4) + (_ << 7) + (_ << 8) + (_ << 24);
+			_ ^= ((v >> 6) & 0x3F) | 0x80;
+			_ += (_ << 1) + (_ << 4) + (_ << 7) + (_ << 8) + (_ << 24);
+			_ ^= (v & 0x3F) | 0x80;
+			_ += (_ << 1) + (_ << 4) + (_ << 7) + (_ << 8) + (_ << 24);
+		}
 	}
 
-	return hash >>> 0;
-};
+	return _ >>> 0;
+}
 
 module.exports = fnv1a;
 // TODO: remove this in the next major version, refactor the whole definition to:
