@@ -27,12 +27,19 @@ const FNV_OFFSETS = {
 // Legacy implementation for 32-bit + Number types, older systems that don't
 // support BigInt
 function fnv1a(str) {
-  // Handle unicode code points > 255
-  str = unescape(encodeURIComponent(str));
-
+  // Handle unicode code points > 0x7f
   let hash = Number(FNV_OFFSETS[32]);
+  let unicoded = false;
   for (let i = 0; i < str.length; i++) {
-    hash ^= str.charCodeAt(i);
+    let v = str.charCodeAt(i);
+    // Non-ASCII char triggers unicode escape logic
+    if (v > 0x7f && !unicoded) {
+      str = unescape(encodeURIComponent(str));
+      v = str.charCodeAt(i);
+      unicoded = true;
+    }
+
+    hash ^= v;
     hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
   }
 
@@ -51,11 +58,18 @@ function bigInt(str, {size} = {size: 32}) {
   let hash = BigInt(FNV_OFFSETS[size]);
   const prime = BigInt(FNV_PRIMES[size]);
 
-  // Handle unicode code points > 255
-  str = unescape(encodeURIComponent(str));
-
+  // Handle unicode code points > 0x7f
+  let unicoded = false;
   for (let i = 0; i < str.length; i++) {
-    hash ^= BigInt(str.charCodeAt(i));
+    let v = str.charCodeAt(i);
+    // Non-ASCII char triggers unicode escape logic
+    if (v > 0x7f && !unicoded) {
+      str = unescape(encodeURIComponent(str));
+      v = str.charCodeAt(i);
+      unicoded = true;
+    }
+
+    hash ^= BigInt(v);
     hash = BigInt.asUintN(size, hash * prime);
   }
 
