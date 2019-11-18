@@ -9,15 +9,12 @@ declare const fnv1a: {
 	import fnv1a = require('@sindresorhus/fnv1a');
 
 	fnv1a('🦄🌈');
-	//=> 582881315
+	//=> 2868248295
 	```
 	*/
 	(string: string): number;
 
-	// TODO: remove this in the next major version, refactor the whole definition to:
-	// declare function fnv1a(string: string): number;
-	// export = fnv1a;
-	default: typeof fnv1a;
+	bigInt(string: string): BigInt;
 };
 
 export = fnv1a;
