@@ -20,18 +20,21 @@ $ npm install @sindresorhus/fnv1a
 ```js
 const fnv1a = require('@sindresorhus/fnv1a');
 
-fnv1a('🦄🌈'); // => 2868248295
+fnv1a('🦄🌈');
+//=> 2868248295
 ```
 
 It returns the hash as a 32-bit positive Number.
 
 ### fnv1a.bigInt(string, [{size}])
 
-On systems that support BigInt, this method may be called to generate larger
-hashes.  This method throws if BigInt is not available, however.
+On systems that support BigInt, this method may be called to generate larger hashes. This method throws if `BigInt` is not available, however.
 
-```
-fnv1a.bigInt('hello world', {size: 128}); // => 143667438548887148232425432707801491127n
+```js
+const fnv1a = require('@sindresorhus/fnv1a');
+
+fnv1a.bigInt('hello world', {size: 128});
+//=> 143667438548887148232425432707801491127n
 ```
 
 It returns the hash as a `size`-bit positive BigInt.
