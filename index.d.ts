@@ -1,4 +1,20 @@
-// Not a TypeScript person, no idea if this is correct - RWK
+declare const fnv1a: {
+	/**
+	[FNV-1a](https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function) non-cryptographic hash function.
 
-declare function fnv1a(string: string): number;
-declare function fnv1a.bigint(string: string): BigInt;
+	@returns The hash as a positive integer.
+
+	@example
+	```
+	import fnv1a = require('@sindresorhus/fnv1a');
+
+	fnv1a('🦄🌈');
+	//=> 582881315
+	```
+	*/
+	(string: string): number;
+
+	bigInt(string: string): BigInt;
+};
+
+export = fnv1a;
