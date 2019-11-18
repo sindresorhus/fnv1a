@@ -37,8 +37,12 @@
 	],
 	"devDependencies": {
 		"ava": "2.4.0",
-		"eslint-plugin-ava": "9.0.0",
 		"tsd": "0.11.0",
 		"xo": "0.25.3"
+	},
+	"xo": {
+		"globals": [
+			"BigInt"
+		]
 	}
 }
