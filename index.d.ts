@@ -9,7 +9,7 @@ declare const fnv1a: {
 	import fnv1a = require('@sindresorhus/fnv1a');
 
 	fnv1a('🦄🌈');
-	//=> 582881315
+	//=> 2868248295
 	```
 	*/
 	(string: string): number;
