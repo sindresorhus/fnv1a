@@ -32,7 +32,7 @@ Returns the hash as a 32-bit positive integer.
 
 ### fnv1a.bigInt(string, options?)
 
-Generate larger hashes using `BigInt`.
+Generate a larger hash using `BigInt`.
 
 Returns the hash as a positive `BigInt`.
 
@@ -45,14 +45,9 @@ Type: `object`
 Type: `number`\
 Values: `32 | 64 | 128 | 256 | 512 | 1024`
 
-The size of the hash.
+The bit size of the hash.
 
 ## Related
 
 - [djb2a](https://github.com/sindresorhus/djb2a) - DJB2a non-cryptographic hash function
 - [sdbm](https://github.com/sindresorhus/sdbm) - SDBM non-cryptographic hash function
-
-
-## License
-
-MIT © [Sindre Sorhus](https://sindresorhus.com)

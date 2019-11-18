@@ -10,7 +10,7 @@
 		"url": "sindresorhus.com"
 	},
 	"engines": {
-		"node": ">=6"
+		"node": ">=10"
 	},
 	"scripts": {
 		"test": "xo && ava && tsd"
@@ -33,7 +33,9 @@
 		"fowler–noll–vo",
 		"fowler",
 		"noll",
-		"vo"
+		"vo",
+		"unicode",
+		"bigint"
 	],
 	"devDependencies": {
 		"ava": "2.4.0",

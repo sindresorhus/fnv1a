@@ -1,7 +1,7 @@
 declare namespace fnv1a {
 	interface Options {
 		/**
-		The size of the hash.
+		The bit size of the hash.
 
 		@default 32
 		*/
@@ -27,6 +27,8 @@ declare const fnv1a: {
 
 	/**
 	[FNV-1a](https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function) non-cryptographic hash function.
+
+	Generate a larger hash using `BigInt`.
 
 	@returns The hash as a positive BigInt.
 
