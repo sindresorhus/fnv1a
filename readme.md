@@ -6,7 +6,6 @@
 
 FNV hashes are designed to be fast while maintaining a low collision rate. The FNV speed allows one to quickly hash lots of data while maintaining a reasonable collision rate. The high dispersion of the FNV hashes makes them well suited for hashing nearly identical strings such as URLs, hostnames, filenames, text, IP addresses, etc.
 
-
 ## Install
 
 ```
@@ -15,29 +14,38 @@ $ npm install @sindresorhus/fnv1a
 
 ## Usage
 
-### fnv1a(string)
-
 ```js
 const fnv1a = require('@sindresorhus/fnv1a');
 
 fnv1a('🦄🌈');
 //=> 2868248295
+
+fnv1a.bigInt('🦄🌈', {size: 128});
+//=> 13487074350300261116944693128525960095n
 ```
 
-It returns the hash as a 32-bit positive Number.
+## API
 
-### fnv1a.bigInt(string, [{size}])
+### fnv1a(string)
 
-On systems that support BigInt, this method may be called to generate larger hashes. This method throws if `BigInt` is not available, however.
+Returns the hash as a 32-bit positive integer.
 
-```js
-const fnv1a = require('@sindresorhus/fnv1a');
+### fnv1a.bigInt(string, options?)
 
-fnv1a.bigInt('hello world', {size: 128});
-//=> 143667438548887148232425432707801491127n
-```
+Generate larger hashes using `BigInt`.
 
-It returns the hash as a `size`-bit positive BigInt.
+Returns the hash as a positive `BigInt`.
+
+#### options
+
+Type: `object`
+
+##### size
+
+Type: `number`\
+Values: `32 | 64 | 128 | 256 | 512 | 1024`
+
+The size of the hash.
 
 ## Related
 

@@ -3,8 +3,7 @@
 // FNV_PRIMES and FNV_OFFSETS from
 // http://www.isthe.com/chongo/tech/comp/fnv/index.html#FNV-param
 //
-// Defining these as strings instead of BigInt literals avoids syntax errors on
-// legacy platforms.
+// Defining these as strings instead of BigInt literals avoids syntax errors on legacy platforms.
 
 const FNV_PRIMES = {
 	32: '16777619',
@@ -24,30 +23,31 @@ const FNV_OFFSETS = {
 	1024: '14197795064947621068722070641403218320880622795441933960878474914617582723252296732303717722150864096521202355549365628174669108571814760471015076148029755969804077320157692458563003215304957150157403644460363550505412711285966361610267868082893823963790439336411086884584107735010676915'
 };
 
-// Legacy implementation for 32-bit + Number types, older systems that don't
-// support BigInt
-function fnv1a(str) {
-	// Handle unicode code points > 0x7f
+// Legacy implementation for 32-bit + number types
+function fnv1a(string) {
+	// Handle Unicode code points > 0x7f
 	let hash = Number(FNV_OFFSETS[32]);
-	let unicoded = false;
-	for (let i = 0; i < str.length; i++) {
-		let v = str.charCodeAt(i);
-		// Non-ASCII char triggers unicode escape logic
-		if (v > 0x7F && !unicoded) {
-			str = unescape(encodeURIComponent(str));
-			v = str.charCodeAt(i);
-			unicoded = true;
+	let isUnicoded = false;
+
+	for (let i = 0; i < string.length; i++) {
+		let characterCode = string.charCodeAt(i);
+
+		// Non-ASCII characters trigger the Unicode escape logic
+		if (characterCode > 0x7F && !isUnicoded) {
+			string = unescape(encodeURIComponent(string));
+			characterCode = string.charCodeAt(i);
+			isUnicoded = true;
 		}
 
-		hash ^= v;
+		hash ^= characterCode;
 		hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
 	}
 
 	return hash >>> 0;
 }
 
-function bigInt(str, {size} = {size: 32}) {
-	if (typeof (BigInt) === 'undefined') {
+function bigInt(string, {size = 32} = {}) {
+	if (typeof BigInt === 'undefined') {
 		throw new TypeError('BigInt is not supported');
 	}
 
@@ -56,21 +56,23 @@ function bigInt(str, {size} = {size: 32}) {
 	}
 
 	let hash = BigInt(FNV_OFFSETS[size]);
-	const prime = BigInt(FNV_PRIMES[size]);
+	const fnvPrime = BigInt(FNV_PRIMES[size]);
 
-	// Handle unicode code points > 0x7f
-	let unicoded = false;
-	for (let i = 0; i < str.length; i++) {
-		let v = str.charCodeAt(i);
-		// Non-ASCII char triggers unicode escape logic
-		if (v > 0x7F && !unicoded) {
-			str = unescape(encodeURIComponent(str));
-			v = str.charCodeAt(i);
-			unicoded = true;
+	// Handle Unicode code points > 0x7f
+	let isUnicoded = false;
+
+	for (let i = 0; i < string.length; i++) {
+		let characterCode = string.charCodeAt(i);
+
+		// Non-ASCII characters trigger the Unicode escape logic
+		if (characterCode > 0x7F && !isUnicoded) {
+			string = unescape(encodeURIComponent(string));
+			characterCode = string.charCodeAt(i);
+			isUnicoded = true;
 		}
 
-		hash ^= BigInt(v);
-		hash = BigInt.asUintN(size, hash * prime);
+		hash ^= BigInt(characterCode);
+		hash = BigInt.asUintN(size, hash * fnvPrime);
 	}
 
 	return hash;
@@ -78,4 +80,3 @@ function bigInt(str, {size} = {size: 32}) {
 
 module.exports = fnv1a;
 module.exports.bigInt = bigInt;
-module.exports.default = fnv1a;
