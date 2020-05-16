@@ -40,7 +40,7 @@ declare const fnv1a: {
 	//=> 13487074350300261116944693128525960095n
 	```
 	*/
-	bigInt(string: string, options?: fnv1a.Options): BigInt;
+	bigInt(string: string, options?: fnv1a.Options): bigint;
 };
 
 export = fnv1a;
