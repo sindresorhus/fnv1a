@@ -1,46 +1,29 @@
-declare namespace fnv1a {
-	interface Options {
-		/**
-		The bit size of the hash.
+export interface Options {
+	/**
+	The bit size of the hash.
 
-		@default 32
-		*/
-		size?: 32 | 64 | 128 | 256 | 512 | 1024;
-	}
+	@default 32
+	*/
+	readonly size?: 32 | 64 | 128 | 256 | 512 | 1024;
 }
 
-declare const fnv1a: {
-	/**
-	[FNV-1a](https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function) non-cryptographic hash function.
+/**
+[FNV-1a](https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function) non-cryptographic hash function.
 
-	@returns The hash as a positive integer.
+@returns The hash as a positive `BigInt`.
 
-	@example
-	```
-	import fnv1a = require('@sindresorhus/fnv1a');
+@example
+```
+import fnv1a from '@sindresorhus/fnv1a';
 
-	fnv1a('🦄🌈');
-	//=> 2868248295
-	```
-	*/
-	(string: string): number;
+fnv1a('🦄🌈', {size: 32});
+//=> 2868248295n
 
-	/**
-	[FNV-1a](https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function) non-cryptographic hash function.
+fnv1a('🦄🌈', {size: 128});
+//=> 13487074350300261116944693128525960095n
 
-	Generate a larger hash using `BigInt`.
-
-	@returns The hash as a positive BigInt.
-
-	@example
-	```
-	import fnv1a = require('@sindresorhus/fnv1a');
-
-	fnv1a.bigInt('🦄🌈', {size: 128});
-	//=> 13487074350300261116944693128525960095n
-	```
-	*/
-	bigInt(string: string, options?: fnv1a.Options): bigint;
-};
-
-export = fnv1a;
+Number(fnv1a('🦄🌈', {size: 32}));
+//=> 2868248295
+```
+*/
+export default function fnv1a(string: string, options?: Options): bigint;

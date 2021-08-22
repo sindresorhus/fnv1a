@@ -15,26 +15,25 @@ $ npm install @sindresorhus/fnv1a
 ## Usage
 
 ```js
-const fnv1a = require('@sindresorhus/fnv1a');
+import fnv1a from '@sindresorhus/fnv1a';
 
-fnv1a('🦄🌈');
-//=> 2868248295
+fnv1a('🦄🌈', {size: 32});
+//=> 2868248295n
 
-fnv1a.bigInt('🦄🌈', {size: 128});
+fnv1a('🦄🌈', {size: 128});
 //=> 13487074350300261116944693128525960095n
+
+Number(fnv1a('🦄🌈', {size: 32}));
+//=> 2868248295
 ```
 
 ## API
 
-### fnv1a(string)
-
-Returns the hash as a 32-bit positive integer.
-
-### fnv1a.bigInt(string, options?)
-
-Generate a larger hash using `BigInt`.
+### fnv1a(string, options?)
 
 Returns the hash as a positive `BigInt`.
+
+If you need it as a `number`, use `32` as `size` and wrap the return value in `Number(…)`.
 
 #### options
 
@@ -43,7 +42,8 @@ Type: `object`
 ##### size
 
 Type: `number`\
-Values: `32 | 64 | 128 | 256 | 512 | 1024`
+Values: `32 | 64 | 128 | 256 | 512 | 1024`\
+Default: `32`
 
 The bit size of the hash.
 

@@ -1,5 +1,5 @@
 import {expectType} from 'tsd';
-import fnv1a = require('.');
+import fnv1a from './index.js';
 
-expectType<number>(fnv1a('🦄🌈'));
-expectType<bigint>(fnv1a.bigInt('🦄🌈', {size: 128}));
+expectType<bigint>(fnv1a('🦄🌈'));
+expectType<bigint>(fnv1a('🦄🌈', {size: 128}));
