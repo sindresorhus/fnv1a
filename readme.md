@@ -8,8 +8,8 @@ FNV hashes are designed to be fast while maintaining a low collision rate. The F
 
 ## Install
 
-```
-$ npm install @sindresorhus/fnv1a
+```sh
+npm install @sindresorhus/fnv1a
 ```
 
 ## Usage
