@@ -26,10 +26,6 @@ fnv1a('🦄🌈', {size: 128});
 Number(fnv1a('🦄🌈', {size: 32}));
 //=> 2868248295
 
-const utf8Buffer = new Uint8Array(100);
-fnv1a('🦄🌈', {size: 32, utf8Buffer});
-//=> 2868248295n
-
 const bytes = new Uint8Array([240, 159, 166, 132, 240, 159, 140, 136]);
 fnv1a(bytes, {size: 32});
 //=> 2868248295n
@@ -46,6 +42,8 @@ If you need it as a `number`, use `32` as `size` and wrap the return value in `N
 #### value
 
 Type: `string | Uint8Array`
+
+A string or UTF-8 bytes.
 
 #### options
 
@@ -70,6 +68,15 @@ This array can be reused across calls to `fnv1a`. Doing so will improve performa
 The size of the array does not have to be large enugh to hold the entire string, but performance will be improved if it is.
 
 This option is only used when `value` is a string.
+
+```js
+import fnv1a from '@sindresorhus/fnv1a';
+
+const utf8Buffer = new Uint8Array(100);
+
+fnv1a('🦄🌈', {size: 32, utf8Buffer});
+//=> 2868248295n
+```
 
 ## Related
 
