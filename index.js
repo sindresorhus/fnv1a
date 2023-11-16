@@ -19,30 +19,54 @@ const FNV_OFFSETS = {
 	1024: 14_197_795_064_947_621_068_722_070_641_403_218_320_880_622_795_441_933_960_878_474_914_617_582_723_252_296_732_303_717_722_150_864_096_521_202_355_549_365_628_174_669_108_571_814_760_471_015_076_148_029_755_969_804_077_320_157_692_458_563_003_215_304_957_150_157_403_644_460_363_550_505_412_711_285_966_361_610_267_868_082_893_823_963_790_439_336_411_086_884_584_107_735_010_676_915n,
 };
 
-export default function fnv1a(string, {size = 32} = {}) {
-	if (!FNV_PRIMES[size]) {
-		throw new Error('The `size` option must be one of 32, 64, 128, 256, 512, or 1024');
-	}
+const cachedEncoder = new globalThis.TextEncoder();
 
-	let hash = FNV_OFFSETS[size];
+function fnv1aUint8Array(uint8Array, size) {
 	const fnvPrime = FNV_PRIMES[size];
+	let hash = FNV_OFFSETS[size];
 
-	// Handle Unicode code points > 0x7f
-	let isUnicoded = false;
-
-	for (let index = 0; index < string.length; index++) {
-		let characterCode = string.charCodeAt(index);
-
-		// Non-ASCII characters trigger the Unicode escape logic
-		if (characterCode > 0x7F && !isUnicoded) {
-			string = unescape(encodeURIComponent(string));
-			characterCode = string.charCodeAt(index);
-			isUnicoded = true;
-		}
-
-		hash ^= BigInt(characterCode);
+	// eslint-disable-next-line unicorn/no-for-loop -- This is a performance-sensitive loop
+	for (let index = 0; index < uint8Array.length; index++) {
+		hash ^= BigInt(uint8Array[index]);
 		hash = BigInt.asUintN(size, hash * fnvPrime);
 	}
 
 	return hash;
+}
+
+function fnv1aEncodeInto(string, size, utf8Buffer) {
+	if (utf8Buffer.length === 0) {
+		throw new Error('The `utf8Buffer` option must have a length greater than zero');
+	}
+
+	const fnvPrime = FNV_PRIMES[size];
+	let hash = FNV_OFFSETS[size];
+	let remaining = string;
+
+	while (remaining.length > 0) {
+		const result = cachedEncoder.encodeInto(remaining, utf8Buffer);
+		remaining = remaining.slice(result.read);
+		for (let index = 0; index < result.written; index++) {
+			hash ^= BigInt(utf8Buffer[index]);
+			hash = BigInt.asUintN(size, hash * fnvPrime);
+		}
+	}
+
+	return hash;
+}
+
+export default function fnv1a(value, {size = 32, utf8Buffer} = {}) {
+	if (!FNV_PRIMES[size]) {
+		throw new Error('The `size` option must be one of 32, 64, 128, 256, 512, or 1024');
+	}
+
+	if (typeof value === 'string') {
+		if (utf8Buffer) {
+			return fnv1aEncodeInto(value, size, utf8Buffer);
+		}
+
+		value = cachedEncoder.encode(value);
+	}
+
+	return fnv1aUint8Array(value, size);
 }
