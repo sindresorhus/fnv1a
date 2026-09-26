@@ -1,4 +1,4 @@
-export interface Options {
+export type Options = {
 	/**
 	The bit size of the hash.
 
@@ -11,7 +11,7 @@ export interface Options {
 
 	This array can be reused across calls to `fnv1a`. Doing so will improve performance because it avoids allocating a new Uint8Array when encoding the string.
 
-	The size of the array does not have to be large enugh to hold the entire string, but performance will be improved if it is.
+	The size of the array does not have to be large enough to hold the entire string, but performance will be improved if it is. It must have a length of at least 4, which is the largest size of a single character in UTF-8.
 
 	This option is only used when `value` is a string.
 
@@ -26,7 +26,7 @@ export interface Options {
 	```
 	*/
 	readonly utf8Buffer?: Uint8Array;
-}
+};
 
 /**
 [FNV-1a](https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function) non-cryptographic hash function.
@@ -53,3 +53,5 @@ fnv1a(bytes, {size: 32});
 ```
 */
 export default function fnv1a(value: string | Uint8Array, options?: Options): bigint;
+
+export {}; // eslint-disable-line unicorn/require-module-specifiers -- It stops the implicit export of the declarations without `export`.

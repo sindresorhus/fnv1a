@@ -65,7 +65,7 @@ A Uint8Array used to encode the string into UTF-8 bytes.
 
 This array can be reused across calls to `fnv1a`. Doing so will improve performance because it avoids allocating a new Uint8Array when encoding the string.
 
-The size of the array does not have to be large enugh to hold the entire string, but performance will be improved if it is.
+The size of the array does not have to be large enough to hold the entire string, but performance will be improved if it is. It must have a length of at least 4, which is the largest size of a single character in UTF-8.
 
 This option is only used when `value` is a string.
 

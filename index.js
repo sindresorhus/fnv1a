@@ -1,5 +1,7 @@
 // FNV_PRIMES and FNV_OFFSETS from
-// http://www.isthe.com/chongo/tech/comp/fnv/index.html#FNV-param
+// https://www.isthe.com/chongo/tech/comp/fnv/index.html#FNV-param
+
+/* eslint-disable no-bitwise -- FNV-1a is defined in terms of XOR. Unlike the 32-bit number operators, `^=` on BigInt is exact and never coerces its operands to int32. */
 
 const FNV_PRIMES = {
 	32: 16_777_619n,
@@ -19,7 +21,7 @@ const FNV_OFFSETS = {
 	1024: 14_197_795_064_947_621_068_722_070_641_403_218_320_880_622_795_441_933_960_878_474_914_617_582_723_252_296_732_303_717_722_150_864_096_521_202_355_549_365_628_174_669_108_571_814_760_471_015_076_148_029_755_969_804_077_320_157_692_458_563_003_215_304_957_150_157_403_644_460_363_550_505_412_711_285_966_361_610_267_868_082_893_823_963_790_439_336_411_086_884_584_107_735_010_676_915n,
 };
 
-const cachedEncoder = new globalThis.TextEncoder();
+const cachedEncoder = new TextEncoder();
 
 function fnv1aUint8Array(uint8Array, size) {
 	const fnvPrime = FNV_PRIMES[size];
@@ -35,8 +37,9 @@ function fnv1aUint8Array(uint8Array, size) {
 }
 
 function fnv1aEncodeInto(string, size, utf8Buffer) {
-	if (utf8Buffer.length === 0) {
-		throw new Error('The `utf8Buffer` option must have a length greater than zero');
+	// `encodeInto` will not write a partial code point, so a buffer that cannot hold the next one reads nothing and the loop would never finish. A code point is at most 4 bytes in UTF-8.
+	if (utf8Buffer.length < 4) {
+		throw new RangeError('The `utf8Buffer` option must have a length of at least 4');
 	}
 
 	const fnvPrime = FNV_PRIMES[size];
@@ -56,7 +59,7 @@ function fnv1aEncodeInto(string, size, utf8Buffer) {
 }
 
 export default function fnv1a(value, {size = 32, utf8Buffer} = {}) {
-	if (!FNV_PRIMES[size]) {
+	if (!Object.hasOwn(FNV_PRIMES, size)) {
 		throw new Error('The `size` option must be one of 32, 64, 128, 256, 512, or 1024');
 	}
 
